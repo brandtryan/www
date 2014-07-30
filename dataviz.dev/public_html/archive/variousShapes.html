@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="d3.js"></script>
+</head>
+<style>
+.inactive, .tentative {
+  stroke: darkgray;
+  stroke-width: 2px;
+  stroke-dasharray: 5 5;
+}
+.tentative {
+  opacity: .5;
+}
+.active {
+  stroke: black
+  stroke-width: 4px;
+  stroke-dasharray: 1;
+}
+circle {
+  fill: red;
+}
+rect {
+  fill: darkgray;
+}
+</style>
+<body>
+<script>
+    var someData = ["filler", "filler", "filler", "filler"];
+
+</script>
+<div id="infovizDiv">
+<svg style="width:500px;height:500px;border:1px lightgray solid;">
+  <path d="M 10,60 40,30 50,50 60,30 70,80" />
+  <polygon style="fill:gray;" />
+<g>
+<circle class="active tentative" cy="100" cx="200" r="30"/>
+<rect class="active" x="410" y="200" width="100" height="50" />
+</g>
+</svg>
+</div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<script>
+
+var journal = [];
+
+function addEntry(events, didITurnIntoASquirrel) {
+  journal.push({
+      events: events,
+      squirrel: didITurnIntoASquirrel
+  });
+}
+
+addEntry(["work", "touched tree", "pizza", "running", "television"], false);
+
+addEntry(["work", "ice cream", "cauliflower", "lasagna", "touched tree", "brushed teeth"], false);
+
+addEntry(["weekend", "cycling", "break", "peanuts", "beer"], false);
+
+function gatherCorrelations(journal) {
+  var phis = {};
+  for (var entry = 0; entry < journal.length; entry++) {
+      var events = journal[entry].events;
+      for (var i = 0; i < events.length; i++) {
+            var event = events[i];
+            if (!(event in phis))
+              phis[event] = phis(tableFor(event, journal));
+          }
+    }
+  return phis;
+}
+
+var correlations = gatherCorrelations(journal);
+console.log(correlations.pizza);
+
+</script>
+
+</body>
+</html>
