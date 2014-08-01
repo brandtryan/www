@@ -1,5 +1,5 @@
 function createSoccerViz() {
-var incomingData = d3.csv("teams.csv", function(data) { 
+d3.csv("worldCup.csv", function(data) { 
 overallTeamViz(data);
 })
 

@@ -42,44 +42,30 @@ teamG
     .on("click", buttonClick)
     .html(function(d) {return d})
 
-  function buttonClick(d) {
-    var maxValue = d3.max(incomingData, function(el) {return parseFloat(el[d])});
-    var colorQuantize =
-      d3.scale.quantize().domain([0,maxValue]).range(colorbrewer.Reds[5]);
-    var radiusScale = d3.scale.linear().domain([0,maxValue]).range([2,20]);
-    d3.selectAll("g.overallG").select("circle").transition().duration(1000)
-    .style("fill", function(p) {return colorQuantize(p[d])}) 
-    .attr("r", function(p) {return radiusScale(p[d])})
-  }
+function buttonClick(datapoint) {
+var maxValue = d3.max(incomingData,
+                     function(d) {return parseFloat(d[datapoint])
+                     });
+var radiusScale = d3.scale.linear().domain([0,maxValue]).range([2,20]);
+d3.selectAll("g.overallG")
+.select("circle")
+.transition()
+.duration(1000)
+.attr("r", function(d) {return radiusScale(d[datapoint])})
+
+}
 
 teamG.on("mouseover", highlightRegion)
 
-function highlightRegion(d,i) {
-  var teamColor = d3.rgb("pink")
-  d3.select(this)
-  .select("text")
-  .classed("active", true)
-  .attr("y", 10)
-
-  d3.selectAll("g.overallG")
-  .select("circle")
-  .style("fill", function(p) { return p.region == d.region ?
-  teamColor.darker(.75) :
-  teamColor.brighter(.5)})
-  this.parentElement.appendChild(this);
-
-}
-
-teamG.on("mouseout", unHighlight)
-
-function unHighlight() {
+function highlightRegion(d) {
 d3.selectAll("g.overallG")
 .select("circle")
-.attr("class", "");
-d3.selectAll("g.overallG")
-.select("text")
-.classed("active", false)
-.attr("y", 30);
+.style("fill", function(p) {return p.region == d.region ? "red" : "gray"})
 }
+
+teamG.on("mouseout", function() {d3.selectAll("g.overallG")
+.select("circle")
+.style("fill", "pink")})
+
 }
 }
