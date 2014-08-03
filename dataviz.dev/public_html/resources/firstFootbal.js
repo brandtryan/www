@@ -102,26 +102,13 @@ function teamClick(d) {
   .html(function(p) { return p })
 }
 
+d3.html("images/football.svg", function(data) {console.log(data)})
+
 d3.html("images/football.svg", loadSVG);
 function loadSVG(svgData) {
   d3.select(svgData).selectAll("path").each(function()
     {d3.select("svg").node().appendChild(this)})
   d3.selectAll("path").attr("transform", "translate(50,50)")
-}
-
-d3.html("images/football.svg", loadSVG);
-
-function loadSVG(svgData) {
-  d3.selectAll("g").each(
-  function() {
-  var gParent = this;
-  d3.select(svgData).selectAll("path").each(
-  function() {
-              gParent.appendChild(this.cloneNode(true))
-  }
-  )
-  }
-  )
 }
 }
 }
