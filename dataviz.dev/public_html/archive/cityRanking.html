@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<title>D3.js, yo</title>
+<meta charset="utf-8"/>
+<body>
+<script src="lib/d3.js"></script>
+<script>
+
+    dataSet = [
+        {"name":"Shanghai"          ,"population":18,"rank":1},
+        {"name":"Guangzhou"         ,"population":11,"rank":10},
+        {"name":"Dongguan"          ,"population":8,"rank":20},
+        {"name":"Cairo"             ,"population":7,"rank":30},
+        {"name":"Saint Petersburg"  ,"population":5,"rank":40},
+        {"name":"New Taipei"        ,"population":4,"rank":50}];
+
+    var svgViewport = d3.select("body").append("svg")
+        .attr("width",300)
+        .attr("height",300);
+
+    var margin = {top: 50, right: 50, bottom: 50, left: 50},
+        width = 300 - margin.left - margin.right,
+        height = 300 - margin.top - margin.bottom;
+
+    var innerSpace = svgViewport.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top +")");
+
+    var xAxisScale = d3.scale.linear()
+        .domain([0,20])
+        .range([0,200]);
+    
+    var yAxisScale = d3.scale.linear()
+        .domain([0,50])
+        .range([0,200]);
+
+    var circles = innerSpace.append("g")
+        .selectAll("circle")
+        .data(dataSet)
+        .enter()
+        .append("circle");
+
+    var circleAttributes = circles
+        .attr("cx", function(d,i) { return xAxisScale(d.population); })
+        .attr("cy", function(d,i) { return yAxisScale(d.rank); })
+        .attr("r", 5);
+
+    var myXAxis = d3.svg.axis().scale(xAxisScale).orient("top");
+    var myYAxis = d3.svg.axis().scale(yAxisScale).orient("left");
+
+    var axisXGroup = innerSpace.append("g")
+        .call( myXAxis );
+
+    var axisYGroup = innerSpace.append("g")
+        .call( myYAxis );
+
+    var text = innerSpace.append("g")
+        .selectAll("text")
+        .data(dataSet)
+        .enter()
+        .append("text");
+
+    var textAttributes = text
+        .attr("x", function(d,i) { return xAxisScale(d.population); })
+        .attr("y", function(d,i) { return yAxisScale(d.rank); })
+        .text(     function(d,i) { return d.name; })
+        .style("fill","steelblue");
+
+</script>
