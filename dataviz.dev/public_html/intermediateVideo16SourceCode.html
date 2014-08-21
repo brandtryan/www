@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+
+var width = 200,
+    height = 200,
+    radius = 25;
+
+// Dragstart Function
+function dragstart(d) {
+
+  circle = d3.select(this);
+
+  if (circle.attr("id") === "circle_0") {
+    circle.style("fill", "red");
+  } else {
+    circle.style("fill", "blue");
+  }
+}
+
+// Dragend Function
+function dragend(d) {
+
+  d3.select("#circle_id_text").text(null);
+  d3.select("#x_coord").text(null);
+  d3.select("#y_coord").text(null);
+
+  d3.select(this)
+      .style("fill", "black");
+}
+
+// Dragmove Function
+function dragmove(d) {
+
+  circle = d3.select(this);
+
+  circleID = circle.attr("id");
+
+  d.x = Math.max(radius, Math.min(width  - radius, d3.event.x))
+  d.y = Math.max(radius, Math.min(height - radius, d3.event.y))
+
+  d3.select("#circle_id_text").text(circleID);
+  d3.select("#x_coord").text(d.x);
+  d3.select("#y_coord").text(d.y);
+
+  circle
+      .attr("cx", d.x)
+      .attr("cy", d.y);
+}
+
+// Drag Behavior with dragstart, drag and dragend events
+var drag = d3.behavior.drag()
+    .origin(Object)
+    .on("dragstart", dragstart)
+    .on("dragend",   dragend  )
+    .on("drag",      dragmove );
+
+// SVG Viewport
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .style("border", "2px solid");
+
+// HTML Printout To Tell Us What Is Going ON
+d3.select("body").append("div").attr("id", "circle_id").text("Circle ID: ");
+d3.select("body").append("div").attr("id", "x_var").text("X: ");
+d3.select("body").append("div").attr("id", "y_var").text("Y: ");
+d3.select("#circle_id").append("span").attr("id", "circle_id_text");
+d3.select("#x_var").append("span").attr("id", "x_coord");
+d3.select("#y_var").append("span").attr("id", "y_coord");
+
+// Initial Drawing of Circle
+svg.selectAll("circle")
+    .data([{x: 50, y: 50}, {x: 150, y: 150}])
+  .enter().append("circle")
+    .attr("r", radius)
+    .attr("cx", function(d, i) { return d.x; })
+    .attr("cy", function(d, i) { return d.y; })
+    .attr("id", function(d, i) { return "circle_" + i; })
+    .call(drag);
+
+</script>

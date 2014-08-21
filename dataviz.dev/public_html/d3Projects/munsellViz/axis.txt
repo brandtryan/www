@@ -1,0 +1,3 @@
+hues are stacked
+y = Value
+x = Chroma

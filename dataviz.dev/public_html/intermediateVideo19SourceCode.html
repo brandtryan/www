@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+//////////////////////////////////////
+//                                  //
+//           SVG Line               //
+//                                  //
+//////////////////////////////////////
+
+// Variables
+var svgWidth  = 400,
+    svgHeight = 400,
+    originalLine = {"x1": 25, "y1": 25, "x2": 125, "y2": 125, "stroke_width": 2},
+    margin = {"top": 25, "right": 25, "bottom": 50, "left": 50},
+    width  = svgWidth  - margin.left - margin.right,
+    height = svgHeight - margin.top  - margin.bottom;
+
+// SVG Viewport
+var svgViewport = d3.select("body").append("svg")
+    .attr("width",  width  + margin.left + margin.right)
+    .attr("height", height + margin.top  + margin.bottom)
+    .style("border", "2px solid");
+
+// Scales
+var xAxisScale = d3.scale.linear()
+    .domain([0, width])
+    .range([0, width]);
+
+var yAxisScale = d3.scale.linear()
+    .domain([0, height])
+    .range([height, 0]);
+
+// Axis Functions
+var xAxis = d3.svg.axis()
+    .scale(xAxisScale)
+    .orient("bottom")
+    .ticks(5);
+
+var yAxis = d3.svg.axis()
+    .scale(yAxisScale)
+    .orient("left")
+    .ticks(5);
+
+// Zoom Function Event Listener
+function zoomFunction() {
+
+    // Select All Lines in the SVG Group Element with Class of Line Group
+    var lines = d3.select(".line_group").selectAll("line");
+
+    // Pan Vector
+    var panVector = d3.event.translate;
+    var panX = panVector[0];
+    var panY = panVector[1];
+
+    // Scaling Multiplier
+    var scaleMultiplier = d3.event.scale;
+
+    // Tell us in HTML what is going on
+    d3.select("#pan_x_span").text(panX);
+    d3.select("#pan_y_span").text(panY);
+    d3.select("#v_scale_val").text(scaleMultiplier);
+
+    // Redraw the Axis
+    innerSpace.select(".x.axis").call(xAxis);
+    innerSpace.select(".y.axis").call(yAxis);
+
+    // Redraw the Line
+    lines
+        .attr("x1", function(d) { return xAxisScale(d.x1); })
+        .attr("y1", function(d) { return yAxisScale(d.y1); })
+        .attr("x2", function(d) { return xAxisScale(d.x2); })
+        .attr("y2", function(d) { return yAxisScale(d.y2); })
+        .attr("stroke-width", function(d) { return d.stroke_width * scaleMultiplier; });
+
+}
+
+// Zoom Behavior
+var zoom = d3.behavior.zoom()
+    .x(xAxisScale)
+    .y(yAxisScale)
+    .scaleExtent([0.2, 10])
+    .on("zoom", zoomFunction);
+
+// Inner Drawing Space
+var innerSpace = svgViewport.append("g")
+    .attr("class", "inner_space")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .call(zoom);
+
+// Hidden Rectangle to Capture Zoom Behavior in Empty Space
+innerSpace.append("g").attr("class", "hidden rectangle")
+    .append("rect")
+    .attr("class", "background")
+    .attr("x", function(d, i) { return xAxisScale(0); })
+    .attr("y", function(d, i) { return yAxisScale(height); })
+    .attr("width", function(d, i) { return xAxisScale(width); })
+    .attr("height", function(d, i) { return yAxisScale(0); })
+    .style("fill", "white");
+
+// Draw Axis
+innerSpace.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+innerSpace.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+// Initial Drawing of SVG Straight Line
+var line = innerSpace.append("g").attr("class", "line_group")
+  .selectAll("line")
+    .data([originalLine])
+  .enter().append("line")
+    .attr("x1", function(d) { return xAxisScale(d.x1); })
+    .attr("y1", function(d) { return yAxisScale(d.y1); })
+    .attr("x2", function(d) { return xAxisScale(d.x2); })
+    .attr("y2", function(d) { return yAxisScale(d.y2); })
+    .attr("stroke", "gray")
+    .attr("stroke-width", function(d) { return d.stroke_width; });
+
+// HTML Divs and Spans To Tell Us What Is Going on
+d3.select("body").append("div").attr("id", "pan_x_div").text("Pan X Translate: ");
+d3.select("body").append("div").attr("id", "pan_y_div").text("Pan Y Translate: ");
+d3.select("body").append("div").attr("id", "v_scale").text("D3 Zoom Scale: ");
+d3.select("#pan_x_div").append("span").attr("id", "pan_x_span");
+d3.select("#pan_y_div").append("span").attr("id", "pan_y_span");
+d3.select("#v_scale").append("span").attr("id", "v_scale_val");
+
+
+
+//////////////////////////////////////
+//                                  //
+// D3 Path Data Generator SVG Path  //
+//                                  //
+//////////////////////////////////////
+
+// Variables
+var svgWidth  = 400,
+    svgHeight = 400,
+    stroke_width = 2,
+    originalTriangle = [{"x": 10 , "y":  10},
+                        {"x": 110, "y":  10},
+                        {"x": 10 , "y": 110},
+                        {"x": 10 , "y":  10}];
+    margin = {"top": 25, "right": 25, "bottom": 50, "left": 50},
+    width  = svgWidth  - margin.left - margin.right,
+    height = svgHeight - margin.top  - margin.bottom;
+
+// SVG Viewport
+var svgViewport = d3.select("body").append("svg")
+    .attr("width",  width  + margin.left + margin.right)
+    .attr("height", height + margin.top  + margin.bottom)
+    .style("border", "2px solid");
+
+// Scales
+var xAxisScale = d3.scale.linear()
+    .domain([0, width])
+    .range([0, width]);
+
+var yAxisScale = d3.scale.linear()
+    .domain([0, height])
+    .range([height, 0]);
+
+// Axis Functions
+var xAxis = d3.svg.axis()
+    .scale(xAxisScale)
+    .orient("bottom")
+    .ticks(5);
+
+var yAxis = d3.svg.axis()
+    .scale(yAxisScale)
+    .orient("left")
+    .ticks(5);
+
+// D3 SVG Line Function
+var lineFunction = d3.svg.line()
+    .x(function(d) { return xAxisScale(d.x); })
+    .y(function(d) { return yAxisScale(d.y); })
+    .interpolate("linear");
+
+// Zoom Function Event Listener
+function zoomFunction() {
+
+    // Pan Vector
+    var panVector = d3.event.translate;
+    var panX = panVector[0];
+    var panY = panVector[1];
+
+    // Scaling Multiplier
+    var scaleMultiplier = d3.event.scale;
+
+    // Tell us in HTML what is going on
+    d3.select("#pan_x_span").text(panX);
+    d3.select("#pan_y_span").text(panY);
+    d3.select("#v_scale_val").text(scaleMultiplier);
+
+    // Redraw the Axis
+    innerSpace.select(".x.axis").call(xAxis);
+    innerSpace.select(".y.axis").call(yAxis);
+
+    // Redefine the D3 SVG Path Data Generator Function
+    var lineFunction = d3.svg.line()
+        .x(function(d) { return xAxisScale(d.x); })
+        .y(function(d) { return yAxisScale(d.y); })
+        .interpolate("linear");
+
+    // Redraw the Triangle Path
+    d3.select(".triangle")
+        .attr("d", lineFunction(originalTriangle))
+        .attr("stroke-width", stroke_width * scaleMultiplier);
+
+}
+
+// Zoom Behavior
+var zoom = d3.behavior.zoom()
+    .x(xAxisScale)
+    .y(yAxisScale)
+    .scaleExtent([0.2, 10])
+    .on("zoom", zoomFunction);
+
+// Inner Drawing Space
+var innerSpace = svgViewport.append("g")
+    .attr("class", "inner_space")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .call(zoom);
+
+// Hidden Rectangle to Fully Capture
+innerSpace.append("g").attr("class", "hidden rectangle")
+    .append("rect")
+    .attr("class", "background")
+    .attr("x", function(d, i) { return xAxisScale(0); })
+    .attr("y", function(d, i) { return yAxisScale(height); })
+    .attr("width", function(d, i) { return xAxisScale(width); })
+    .attr("height", function(d, i) { return yAxisScale(0); })
+    .style("fill", "white");
+
+// Draw Axes
+innerSpace.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+innerSpace.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+
+// Initial Drawing of the Triangle
+var triangleGraph = innerSpace.append("g").attr("class", "triangle_graph")
+    .append("path").attr("class", "triangle")
+    .attr("d", lineFunction(originalTriangle))
+    .attr("stroke", "blue")
+    .attr("stroke-width", stroke_width)
+    .attr("fill", "none");
+
+// HTML Printout To Tell Us What Is Going ON
+d3.select("body").append("div").attr("id", "pan_x_div").text("Pan X Translate: ");
+d3.select("body").append("div").attr("id", "pan_y_div").text("Pan Y Translate: ");
+d3.select("body").append("div").attr("id", "v_scale").text("D3 Zoom Scale: ");
+d3.select("#pan_x_div").append("span").attr("id", "pan_x_span");
+d3.select("#pan_y_div").append("span").attr("id", "pan_y_span");
+d3.select("#v_scale").append("span").attr("id", "v_scale_val");
+
+
+
+//////////////////////////////////////
+//                                  //
+//         Simple SVG Path          //
+//                                  //
+//////////////////////////////////////
+
+// From Mozilla Foundation SVG Path Tutorial
+// https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+
+// Create SVG
+d3.select("body").append("svg");
+
+// Create Path
+d3.select("svg").append("path")
+    .attr("d", "M10 315 L 110 215 A 30 50 0 0 1 162.55 162.45 L 172.55 152.45 A 30 50 -45 0 1 215.1 109.9 L 315 10")
+    .attr("stroke", "black")
+    .attr("fill", "green")
+    .attr("stroke-width", "2")
+    .attr("fill-opacity", "0.5");
+
+
+
+//////////////////////////////////////
+//                                  //
+//         D3 Zoom SVG Path         //
+//                                  //
+//////////////////////////////////////
+
+// Variables
+var svgWidth  = 400,
+    svgHeight = 400,
+    margin = {"top": 25, "right": 25, "bottom": 25, "left": 25},
+    width  = svgWidth  - margin.left - margin.right,
+    height = svgHeight - margin.top  - margin.bottom,
+    svgPathInstructions = "M10 315 L 110 215 A 30 50 0 0 1 162.55 162.45 L 172.55 152.45 A 30 50 -45 0 1 215.1 109.9 L 315 10"
+
+// SVG Viewport
+var svgViewport = d3.select("body").append("svg")
+    .attr("width",  width  + margin.left + margin.right)
+    .attr("height", height + margin.top  + margin.bottom)
+    .style("border", "2px solid");
+
+
+// Zoom Function Event Listener
+function zoomFunction() {
+
+    // Pan Vector
+    var panVector = d3.event.translate;
+    var panX = panVector[0];
+    var panY = panVector[1];
+
+    // Scaling Multiplier
+    var scaleMultiplier = d3.event.scale;
+
+    // Tell us in HTML what is going on
+    d3.select("#pan_x_span").text(panX);
+    d3.select("#pan_y_span").text(panY);
+    d3.select("#v_scale_val").text(scaleMultiplier);
+
+    // Redraw the SVG Path (Transform Translate & Scale)
+    d3.select("path")
+        .attr("transform",
+            "translate(" + panVector + ") scale(" + scaleMultiplier + ")");
+}
+
+// Zoom Behavior
+var zoom = d3.behavior.zoom()
+    .scaleExtent([0.2, 10])
+    .on("zoom", zoomFunction);
+
+// Inner Drawing Space
+var innerSpace = svgViewport.append("g")
+    .attr("class", "inner_space")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .call(zoom);
+
+// Hidden Rectangle to Fully Capture
+innerSpace.append("g").attr("class", "hidden rectangle")
+    .append("rect")
+    .attr("class", "background")
+    .attr("x", function(d, i) { return 0; })
+    .attr("y", function(d, i) { return 0; })
+    .attr("width", function(d, i) { return width; })
+    .attr("height", function(d, i) { return height; })
+    .style("fill", "#c6dbef");
+
+// Initial Drawing of the SVG Path
+innerSpace.append("g").attr("class", "path_group")
+    .append("path").attr("class", "path_drawing")
+    .attr("d", svgPathInstructions)
+    .attr("stroke", "black")
+    .attr("fill", "green")
+    .attr("stroke-width", "2")
+    .attr("fill-opacity", "0.5");
+
+// HTML Printout To Tell Us What Is Going ON
+d3.select("body").append("div").attr("id", "pan_x_div").text("Pan X Translate: ");
+d3.select("body").append("div").attr("id", "pan_y_div").text("Pan Y Translate: ");
+d3.select("body").append("div").attr("id", "v_scale").text("D3 Zoom Scale: ");
+d3.select("#pan_x_div").append("span").attr("id", "pan_x_span");
+d3.select("#pan_y_div").append("span").attr("id", "pan_y_span");
+d3.select("#v_scale").append("span").attr("id", "v_scale_val");
+
+</script>
