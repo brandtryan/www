@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<title>Hue is X Chroma is Y, Value is Filter</title>
 <style>
 
 body {
@@ -13,10 +14,21 @@ body {
   shape-rendering: crispEdges;
 }
 
-.dot {
-  stroke: #000;
+.bar {
+  fill: steelblue;
+}
+
+.x.axis path {
+  display: none;
 }
 
 </style>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var color = d3.scale.ordinal().range([d3.lab(50.21, 57.26, 29.81),d3.lab(69.93, 40.32, 78.53),d3.lab(79.39, 10.12, 101.9),
+d3.lab(71.42, -21.02, 79.66),d3.lab(72.19, -4515, 20.35),d3.lab(64.58, -53.27, -1.51),d3.lab(63.622, -38.83, -26.79),
+d3.lab(54.24, -8.16, -44.07),d3.lab(42.11, 31.94, -36.11),d3.lab(62.03, 43.52, -5.88)]);
+
+</script>
