@@ -2,15 +2,7 @@
 <meta charset="utf-8">
 <style>
 
-.bar {
-  fill: steelblue;
-}
-
-.bar:hover {
-  fill: brown;
-}
-
-.axis {
+body {
   font: 10px sans-serif;
 }
 
@@ -21,6 +13,10 @@
   shape-rendering: crispEdges;
 }
 
+.bar {
+  fill: steelblue;
+}
+
 .x.axis path {
   display: none;
 }
@@ -29,6 +25,8 @@
 <body>
 <script src="resources/d3.js"></script>
 <script>
+
+var callbackError,callbackData;
 
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
@@ -46,18 +44,23 @@ var xAxis = d3.svg.axis()
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left")
-    .ticks(10, "%");
+    .orient("left");
 
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+   
+d3.csv("data/_data_5R.csv", function(error,data) {
+    // x.domain([0, d3.max(data, function(d) { return d.v; })]);
+    x.domain(data.map(function(d) { return d.v; }));
+    y.domain([0, d3.max(data, function(d) { return d.c; })]);
 
-d3.tsv("data/_data_barChart.tsv", type, function(error, data) {
-  x.domain(data.map(function(d) { return d.letter; }));
-  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+    data.forEach(function(d) {
+        d.v = +d.v;
+        d.c = +d.c;
+    });
 
   svg.append("g")
       .attr("class", "x axis")
@@ -72,23 +75,22 @@ d3.tsv("data/_data_barChart.tsv", type, function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Frequency");
+      .text("Chroma");
 
   svg.selectAll(".bar")
       .data(data)
     .enter().append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.letter); })
+      .attr("x", function(d) { return x(d.v); })
       .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.frequency); })
-      .attr("height", function(d) { return height - y(d.frequency); });
+      .attr("y", function(d) { return y(d.c); })
+      .attr("height", function(d) { return height - y(d.c); });
 
 });
 
 function type(d) {
-  d.frequency = +d.frequency;
-  return d;
+  d.c = +d.c;
+  return c;
 }
 
 </script>
-
