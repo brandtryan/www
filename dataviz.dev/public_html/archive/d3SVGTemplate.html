@@ -1,29 +1,20 @@
 <!DOCTYPE html>
 <title>D3.js, yo</title>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <meta charset="utf-8"/>
-<body>
-<script src="lib/d3.js"></script>
+
 <script>
 
     var margin = {top: 50, right: 50, bottom: 50, left: 50},
         width = 300 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
-    var myScale = d3.scale.linear()
-        .domain([0,10])
-        .range([0,width]);
-
-    var myXAxis = d3.svg.axis().scale(myScale).orient("top");
-    var myYAxis = d3.svg.axis().scale(myScale).orient("left");
-
-    var mySVG = d3.select("body").append("svg")
+    var svg = d3.select("body").append("svg")
         .attr("width", width + margin.right + margin.left)
         .attr("height", height + margin.top + margin.bottom);
 
-    var innerSpace = mySVG.append("g")
+    var innerSpace = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var axisXGroup = innerSpace.append("g").call(myXAxis);
-    var axisYGroup = innerSpace.append("g").call(myYAxis);
 
 </script>
