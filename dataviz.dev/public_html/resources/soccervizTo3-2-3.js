@@ -82,7 +82,7 @@ function overallTeamViz(incomingData) {
 
   function unHighlight() {
     d3.selectAll("g.overallG").select("circle").attr("class", "");
-    d3.selectAll("g.overallG").select("text").classed("hightlight", false).attr("y", 30);
+    d3.selectAll("g.overallG").select("text").classed("active", false).attr("y", 30);
   }
 }
 }

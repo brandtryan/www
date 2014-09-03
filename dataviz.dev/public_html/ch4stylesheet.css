@@ -1,0 +1,17 @@
+<style>
+line {
+    shape-rendering: crispEdges;
+    stroke: #000;
+}
+
+line.minor {
+    stroke: #777;
+    stroke-dasharray: 2,2;
+}
+
+path.domain {
+    fill: none;
+    stroke: black;
+}
+
+</style>

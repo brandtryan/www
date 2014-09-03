@@ -1,10 +1,68 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<title>WorldCup Visualization</title>
+<title>Chapter 4</title>
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="ch4stylesheet.css">
+<div id="viz">
+    <svg style="width:960px;height:500px;"/>
+</div>
 <script>
 
+d3.csv("boxplots.csv", scatterplot)
+
+function scatterplot(data) {
+    xScale = d3.scale.linear().domain([1,8]).range([20,470]);
+    yScale = d3.scale.linear().domain([0,100]).range([480,20]);
+
+yAxis = d3.svg.axis()
+    .scale(yScale)
+    .orient("right")
+    .ticks(8)
+    .tickSize(-470)
+    .tickSubdivide(true);
+
+d3.select("svg").append("g")
+    .attr("transform","translate(470,0)")
+    .attr("id","yAxisG")
+    .call(yAxis);
+
+xAxis = d3.svg.axis()
+    .scale(xScale)
+    .orient("bottom")
+    .tickSize(-470)
+    .tickValues([1,2,3,4,5,6,7]);
+
+d3.select("svg").append("g")
+    .attr("transform","translate(0,480)")
+    .attr("id","xAxisG")
+    .call(xAxis);
+
+d3.select("svg").selectAll("circle.median")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("class", "tweets")
+    .attr("r",5)
+    .attr("cx", function(d) { return xScale(d.day) })
+    .attr("cy", function(d) { return yScale(d.median) })
+    .style("fill","darkgrey"); 
+
+d3.select("svg").selectAll("g.box")
+.data(data)
+.enter()
+.append("g")
+.attr("class", "box")
+.attr("transform", function(d) 
+        {return "translate(" + xScale(d.day) +"," + yScale(d.median) + ")"})
+.each(function(d,i) {
+        d3.select(this)
+            .append("rect")
+            .attr("width", 20)
+            .attr("height", yScale(d.q3) - yScale(d.q1));
+        })
 
 
 
+}
 </script>
+
