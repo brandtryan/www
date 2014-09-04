@@ -6,9 +6,8 @@
 </div>
 <script>
 
-var newArc = d3.svg.arc();
-
-d3.json("data/tweets.json", function(incData){
+d3.json("data/tweets.json", function(data){
+        tweetData = data.tweets;
         nestedTweets = d3.nest()
         .key(function(el){return el.user})
         .entries(incData);
