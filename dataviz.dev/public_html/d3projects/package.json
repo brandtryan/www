@@ -1,0 +1,24 @@
+{
+    "name": "d3-project-template",
+    "version": "0.1.0",
+    "description": "Ready to go d3 data visualization project template",
+    "keywords": [
+        "data visualization",
+        "d3"
+    ],
+    "homepage": "<project home page>",
+    "author": {
+        "name": "Brandt Ryan",
+        "url": "brandtryan.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/brandtryan/d3projects.git"
+    },
+    "dependencies": {
+        "d3":"3.x"
+    },
+    "devDependencies": {
+        "uglify-js": "2.x"
+    }
+}
